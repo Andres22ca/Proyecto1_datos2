@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(libreria_instrumetalizacion SHARED library.cpp
         Memory_Tracker.cpp
-        Memory_Tracker.h)
+        Memory_Tracker.h
+        Main.cpp)

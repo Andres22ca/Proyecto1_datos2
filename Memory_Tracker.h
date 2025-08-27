@@ -17,7 +17,7 @@
 struct  AllocationInfo {
     void* address; //Direccion
     size_t size;//tamano en bits
-    std ::string archivo; //archivo
+    std ::string file; //archivo
     int line; // Liena del archivvo
     long long timestamp; //cuando paso
 
