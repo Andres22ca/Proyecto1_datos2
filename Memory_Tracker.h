@@ -27,6 +27,15 @@ struct  AllocationInfo {
 class MemoryTracker {
 private:
     std::unordered_map<void*, AllocationInfo> allocations;
+
+    // métricas generales
+    size_t totalAllocations = 0;       // total de llamadas a new/new[]
+    size_t activeAllocations = 0;      // asignaciones activas
+    size_t currentMemoryUsage = 0;     // memoria actual en bytes
+    size_t peakMemoryUsage = 0;        // memoria máxima usada
+    size_t leakedMemory = 0;           // total fugado
+
+    // Singleton
     MemoryTracker()= default;
     MemoryTracker(const MemoryTracker&) = delete;
     MemoryTracker& operator=(const MemoryTracker&) = delete;
@@ -41,18 +50,10 @@ public:
 
     void reportLeaks();
 
+    // destructor: imprime fugas automáticamente al final
+    ~MemoryTracker();
 
 };
-
-
-
-
-
-
-
-
-
-
 
 
 
