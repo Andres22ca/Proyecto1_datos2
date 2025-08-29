@@ -3,11 +3,11 @@
 #include <cstddef>
 
 
-void* operator new(size_t size);
-void operator delete(void* ptr);
+void* operator new(size_t size, const char* file, int line);
+void operator delete(void* ptr) noexcept;
 
-void* operator new[](size_t size);
-void operator delete[](void* ptr);
+void* operator new[](size_t size, const char* file, int line);
+void operator delete[](void* ptr) noexcept;
 
 
 

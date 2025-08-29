@@ -27,16 +27,27 @@ struct  AllocationInfo {
 class MemoryTracker {
 private:
     std::unordered_map<void*, AllocationInfo> allocations;
+    MemoryTracker()= default;
+    MemoryTracker(const MemoryTracker&) = delete;
+    MemoryTracker& operator=(const MemoryTracker&) = delete;
 
-    MemoryTracker() = default;
+
 public:
     static MemoryTracker& getInstance();
 
     void registerAllocation(void* ptr, size_t size, const std::string& file, int line);
+
     void registerDeallocation(void* ptr);
 
     void reportLeaks();
+
+
 };
+
+
+
+
+
 
 
 

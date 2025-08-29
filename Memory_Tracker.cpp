@@ -11,6 +11,7 @@ MemoryTracker& MemoryTracker::getInstance() {
 
 }
 
+
 void MemoryTracker::registerAllocation(void* ptr, size_t size, const std::string& file, int line) {
     AllocationInfo info{ptr, size, file, line,
         std::chrono::system_clock::now().time_since_epoch().count()};

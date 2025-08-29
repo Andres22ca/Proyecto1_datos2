@@ -5,25 +5,20 @@
 
 #include "Memory_Tracker.h"
 #include <iostream>
+#define new new (__FILE__, __LINE__)
+#include "library.h"
 
 int main() {
-    // referencia al singleton
     MemoryTracker& tracker = MemoryTracker::getInstance();
 
-    // simular una asignación (normalmente esto lo haría operator new)
-    int* x = (int*)malloc(sizeof(int));
-    tracker.registerAllocation(x, sizeof(int), "main.cpp", __LINE__);
+    int* a = new int;        // registrará automáticamente
+    int* arr = new int[5];   // registrará automáticamente
 
-    // simular otra asignación
-    int* y = (int*)malloc(10 * sizeof(int));
-    tracker.registerAllocation(y, 10 * sizeof(int), "main.cpp", __LINE__);
+    delete a;                // liberación registrada
+    // dejar arr sin delete para probar la fuga
 
-    // liberar una de las asignaciones
-    free(x);
-    tracker.registerDeallocation(x);
-
-    // reporte de fugas al final
-    tracker.reportLeaks();
+    tracker.reportLeaks();   // debería mostrar arr como fuga
 
     return 0;
 }
+
