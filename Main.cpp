@@ -8,17 +8,18 @@
 #define new new (__FILE__, __LINE__)
 #include "library.h"
 
+
+
 int main() {
-    MemoryTracker& tracker = MemoryTracker::getInstance();
+    auto& tracker = MemoryTracker::getInstance(); // inicia servidor
 
-    int* a = new int;        // registrará automáticamente
-    int* arr = new int[5];   // registrará automáticamente
+    int* a = new int;
+    int* b = new int[5];
 
-    delete a;                // liberación registrada
-    // dejar arr sin delete para probar la fuga
-
-    tracker.reportLeaks();   // debería mostrar arr como fuga
+    delete a;
+    // b no se borra intencionalmente para generar leak
 
     return 0;
 }
+
 

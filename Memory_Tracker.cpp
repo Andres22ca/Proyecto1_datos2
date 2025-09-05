@@ -6,8 +6,14 @@
 
 MemoryTracker& MemoryTracker::getInstance() {
     static MemoryTracker instance;
+    static bool started = false;
+    if (!started) {
+        instance.startServer(54000); // inicia el servidor en el puerto 54000
+        started = true;
+    }
     return instance;
 }
+
 
 
 void MemoryTracker::registerAllocation(void* ptr, size_t size, const std::string& file, int line) {
@@ -22,6 +28,7 @@ void MemoryTracker::registerAllocation(void* ptr, size_t size, const std::string
     if (currentMemoryUsage > peakMemoryUsage) {
         peakMemoryUsage = currentMemoryUsage;
     }
+    sendUpdateToGUI();
 
 }
 
@@ -31,7 +38,9 @@ void MemoryTracker::registerDeallocation(void* ptr) {
         currentMemoryUsage -= it->second.size;
         activeAllocations--;
         allocations.erase(it);
+
     }
+    sendUpdateToGUI();
 }
 
 void MemoryTracker::reportLeaks() {
@@ -68,12 +77,20 @@ void MemoryTracker::reportLeaks() {
     std::cout << "---------------------\n";
 }
 
+
+//destructor
 MemoryTracker::~MemoryTracker() {
     if (!allocations.empty()) {
         std::cout << "\n[!] Program ended with leaks:\n";
         reportLeaks();
     }
+
+    // Detener servidor TCP
+    serverRunning = false;
+    if (serverThread.joinable())
+        serverThread.join();
 }
+
 
 
 
