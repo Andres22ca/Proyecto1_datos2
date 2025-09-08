@@ -23,6 +23,7 @@ void MemoryTracker::registerAllocation(void* ptr, size_t size, const std::string
     if (currentMemoryUsage > peakMemoryUsage) peakMemoryUsage = currentMemoryUsage;
 
     sendUpdateToGUI();
+    socketServer.sendMessage(getAllocEventJSON(info));
 }
 
 void MemoryTracker::registerDeallocation(void* ptr) {
@@ -32,6 +33,7 @@ void MemoryTracker::registerDeallocation(void* ptr) {
         activeAllocations--;
         allocations.erase(it);
     }
+    socketServer.sendMessage(getFreeEventJSON(ptr));
     sendUpdateToGUI();
 }
 
@@ -71,6 +73,28 @@ std::string MemoryTracker::getMetricsJSON() {
     oss << "}";
     return oss.str();
 }
+
+std::string MemoryTracker::getAllocEventJSON(const AllocationInfo& info) {
+    std::ostringstream oss;
+    oss << "{";
+    oss << "\"type\":\"alloc\",";
+    oss << "\"address\":\"" << info.address << "\",";
+    oss << "\"size\":" << info.size << ",";
+    oss << "\"file\":\"" << info.file << "\",";
+    oss << "\"line\":" << info.line;
+    oss << "}";
+    return oss.str();
+}
+
+std::string MemoryTracker::getFreeEventJSON(void* ptr) {
+    std::ostringstream oss;
+    oss << "{";
+    oss << "\"type\":\"free\",";
+    oss << "\"address\":\"" << ptr << "\"";
+    oss << "}";
+    return oss.str();
+}
+
 
 void MemoryTracker::sendUpdateToGUI() {
     socketServer.sendMessage(getMetricsJSON());

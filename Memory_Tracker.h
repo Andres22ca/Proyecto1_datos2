@@ -42,8 +42,12 @@ public:
     void reportLeaks();
     std::string getMetricsJSON();
     void sendUpdateToGUI();
-
     bool isTracked(void* ptr);
+    //métodos para enviar eventos puntuales
+    std::string getAllocEventJSON(const AllocationInfo& info);
+    std::string getFreeEventJSON(void* ptr);
+
+
 
     ~MemoryTracker();
 };

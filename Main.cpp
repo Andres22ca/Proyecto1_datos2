@@ -1,20 +1,25 @@
+//
+// Created by andres on 26/8/25.
+// Este main es solo para pruebas, no tiene que estar en la version final ni mucho menos en la GUI
+
+
 #include "Memory_Tracker.h"
 #include <iostream>
-#include <thread>
-#include <chrono>
+#define new new (__FILE__, __LINE__)
+#include "library.h"
+
+
 
 int main() {
-    std::cout << "[Main] Starting Memory Tracker...\n";
+    auto& tracker = MemoryTracker::getInstance(); // inicia servidor
 
-    // Inicializa el tracker y el socket server
-    MemoryTracker& tracker = MemoryTracker::getInstance();
+    int* a = new int;
+    int* b = new int[5];
 
-    std::cout << "[Main] Memory Tracker is running. Waiting for GUI connections...\n";
-
-    // Mantener el programa vivo para que el servidor siga corriendo
-    while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
+    delete a;
+    // b no se borra intencionalmente para generar leak
 
     return 0;
 }
+
+
