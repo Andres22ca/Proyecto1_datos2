@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <cstddef>
 #include <sstream>
+#include <mutex>
 
 struct AllocationInfo {
     void* address;
@@ -24,11 +25,22 @@ private:
     std::unordered_map<void*, AllocationInfo> allocations;
     SocketServer socketServer;
 
-    size_t totalAllocations = 0;
-    size_t activeAllocations = 0;
-    size_t currentMemoryUsage = 0;
-    size_t peakMemoryUsage = 0;
-    size_t leakedMemory = 0;
+    std::atomic<size_t> totalAllocations{0};    // atómicos: se actualizan muy seguido
+    std::atomic<size_t> activeAllocations{0};
+    std::atomic<size_t> currentMemoryUsage{0};
+    std::atomic<size_t> peakMemoryUsage{0};
+    std::atomic<size_t> leakedMemory{0};
+
+    mutable std::mutex mtx_;
+
+    static thread_local bool inTracker_;
+
+    // (NUEVO) Guard de ámbito para desactivar tracking interno
+    struct InternalGuard {
+        InternalGuard()  { MemoryTracker::inTracker_ = true; }
+        ~InternalGuard() { MemoryTracker::inTracker_ = false; }
+    };
+
 
     MemoryTracker();
     MemoryTracker(const MemoryTracker&) = delete;
