@@ -62,4 +62,6 @@ public:
 
 
     ~MemoryTracker();
+
 };
+#define MP_NEW new(__FILE__, __LINE__)
