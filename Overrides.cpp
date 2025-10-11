@@ -6,9 +6,9 @@
 #include <new>         // std::bad_alloc
 #include <cstddef>     // std::size_t
 
-// -----------------------------
+
 // 1) NEW/DELETE "NORMALES"
-// -----------------------------
+
 
 void* operator new(std::size_t size) {
     void* ptr = std::malloc(size);
